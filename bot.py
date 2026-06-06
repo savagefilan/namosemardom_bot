@@ -18,7 +18,6 @@ CHANNEL_2_ID = -1003517185269
 CHANNEL_1_LINK = "https://t.me/+fqQdF2eL3xJiODlk"
 CHANNEL_2_LINK = "https://t.me/+0GccRvh-sRpmNDlk"
 
-# بارگذاری ویدیوها
 if os.path.exists(FILE_NAME):
     try:
         with open(FILE_NAME, "r", encoding="utf-8") as f:
@@ -36,10 +35,9 @@ def is_member_in_both_channels(user_id):
     try:
         m1 = bot.get_chat_member(CHANNEL_1_ID, user_id).status
         m2 = bot.get_chat_member(CHANNEL_2_ID, user_id).status
-        print(f"User {user_id} -> Ch1: {m1} | Ch2: {m2}")  # لاگ مهم
+        print(f"User {user_id} | Ch1: {m1} | Ch2: {m2}")
         return m1 in ["member", "administrator", "creator"] and m2 in ["member", "administrator", "creator"]
-    except Exception as e:
-        print(f"خطا در چک عضویت: {e}")
+    except:
         return False
 
 def show_join_message(message):
@@ -64,7 +62,6 @@ def start(message):
     user_id = message.from_user.id
     text = message.text.split()
 
-    # Deep Link (لینک ویدیو)
     if len(text) > 1:
         try:
             num = int(text[1])
@@ -83,7 +80,6 @@ def start(message):
         bot.reply_to(message, f"✅ خوش اومدی ادمین!\nتعداد ویدیوها: {len(videos)}")
         return
 
-    # کاربر معمولی
     if not is_member_in_both_channels(user_id):
         show_join_message(message)
         return
@@ -93,7 +89,7 @@ def start(message):
 @bot.callback_query_handler(func=lambda call: call.data == "check_membership")
 def check_membership(call):
     if is_member_in_both_channels(call.from_user.id):
-        bot.answer_callback_query(call.id, "✅ تبریک!")
+        bot.answer_callback_query(call.id, "🎉 تبریک!")
         bot.edit_message_text("🎉 عضوی از ما شدی خوشگله !!\n\n/start بزن", 
                              call.message.chat.id, call.message.message_id)
     else:
